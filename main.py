@@ -147,7 +147,7 @@ def c_main(stdscr: 'curses._CursesWindow'):
                     task_index += 1
                 else: task_index = 0
             elif column == 1:
-                if property_index <= property_count:
+                if property_index < property_count:
                     property_index += 1
                 else: property_index = 1   
         elif key == ord('k') or key == 259: #UP
