@@ -4,8 +4,10 @@ import time
 import todotxtio
 import os
 import datetime
+from os.path import expanduser
+home = expanduser("~")
 
-todotxt = 'todo.txt'
+todotxt = home+'/todo.txt'
 
 def write(task: todotxtio.Todo):
     global todotxt
@@ -200,4 +202,4 @@ def main():
     return curses.wrapper(c_main)
 
 if __name__ == '__main__':
-    exit(main())
+    exit(main()) 
