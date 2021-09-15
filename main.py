@@ -65,8 +65,9 @@ def get_input(win: 'curses._CursesWindow', prompt: str):
 
 def c_main(stdscr: 'curses._CursesWindow'):
     stdscr.keypad(True)
-    stdscr.nodelay(1) ## getch won't block
+    stdscr.nodelay(0) ## getch won't block
     curses.noecho()
+    stdscr.refresh()
 
     y, x = stdscr.getmaxyx()
 
@@ -185,7 +186,6 @@ def c_main(stdscr: 'curses._CursesWindow'):
         win3.refresh()
         
         # DELAY
-        time.sleep(0.01)
 
     # WRITE CHANGES TO FILE
     write(tasks)
