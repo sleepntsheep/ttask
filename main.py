@@ -79,6 +79,7 @@ def c_main(stdscr: 'curses._CursesWindow'):
     column = 0
     time_object = datetime.datetime.today()
     date = str(time_object)[0:10]
+    property_count = 8
 
     win1 = curses.newwin(y-3, int(x/2), 0, 0)
     win2 = curses.newwin(y-3, x - int(x/2), 0, int(x/2))
@@ -86,6 +87,17 @@ def c_main(stdscr: 'curses._CursesWindow'):
 
     while key != ord('q'):
         tasks_count = len(tasks)
+
+        if task_index < 0:
+            task_index = tasks_count - 1
+        elif task_index > tasks_count -1:
+            task_index = 0
+
+        if property_index < 1:
+            property_index = property_count
+        elif property_index > property_count:
+            property_index = 1
+
         if tasks_count > 0: selected_task = tasks[task_index]
         else: selected_task = None
 
@@ -145,28 +157,21 @@ def c_main(stdscr: 'curses._CursesWindow'):
 
         elif key == ord('j') or key == 258: # DOWN
             if column == 0:
-                if task_index < tasks_count-1:
-                    task_index += 1
-                else: task_index = 0
+                task_index += 1
             elif column == 1:
-                if property_index < property_count:
-                    property_index += 1
-                else: property_index = 1   
+                property_index += 1
         elif key == ord('k') or key == 259: #UP
             if column == 0:
-                if task_index > 0:
-                    task_index -= 1
-                else: task_index = tasks_count-1
+                task_index -= 1
             elif column == 1:
-                if property_index > 1:
-                    property_index -= 1
-                else: property_index = property_count
+                property_index -= 1
         elif key == ord('d'): # MARK AS DONE/UNDONE
             if column == 0:
                 done(selected_task)
         elif key == ord('r'): # REMOVE TASK
             if column == 0:
                 if selected_task != None: del tasks[task_index]
+                task_index -= 1
         elif key in [ord('h'), ord('l'), 260, 261]:
             column ^= True
         elif key == ord('w'):
