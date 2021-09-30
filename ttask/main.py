@@ -16,11 +16,9 @@ def switch_priority(task: Todo):
     if i < len(prioritys) -1: i += 1
     else: i = 0
     task.priority = prioritys[i]
-    sort_tasks()
     
 def done(task: Todo):
     task.completed ^= True
-    sort_tasks()
 
 def sort_tasks():
     global tasks
@@ -83,7 +81,7 @@ def c_main(stdscr: 'curses._CursesWindow'):
         ###### HANDLE KEYS
         key = stdscr.getch()
         if key == ord('a'):
-            text = get_input(win2, 'ADD: Enter task name = ')
+            text = get_input(win2, 'ADD: Enter task name =')
             if text != '':
                 newtask = Todo(
                     text = text,
@@ -101,8 +99,10 @@ def c_main(stdscr: 'curses._CursesWindow'):
             done(selected_task)
         elif key == ord('r'): # REMOVE TASK
             if selected_task:
-                del tasks[task_index]
-                task_index -= 1
+                text = get_input(win2, 'Confirm (Y,n) =')
+                if text.lower() == 'y' or text == '':
+                    del tasks[task_index]
+                    task_index -= 1
         elif key == ord('w'): # WRITE CHANGE TO FILE
             write(tasks)
         elif key == ord('e'): # EDIT PRIORITY
