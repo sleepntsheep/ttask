@@ -11,20 +11,18 @@ key
 ```
 a: add new task
 r: remove selected task
-h, l/ left, right: change column
 j, k/ up, down: navigate selected task/ property
 d: mark task as done 
 w: write changes to todo.txt
 q: quit and write changes
-e: edit selected property
-f: sort tasks (done, priority)
+e: edit priority
 ```
 
 ## dependencies
 
-if you are on windows
-> pip install windows-curses
+windows:
+>  windows-curses
 
 ## notes
 
-projects , tags, contexts are not working
+todo.txt is put in your home folder

@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "ttask"
+version = "0.1.0"
+description = ""
+authors = ["sleepntsheep <contact@papangkorn.com>"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/sleepntsheep/ttask"
+
+[tool.poetry.dependencies]
+python = ">=3.5"
+windows-curses = [
+    { version = '*', platform = 'windows' }
+]
+
+[tool.poetry.scripts]
+ttask = "ttask.main:main"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+include = ["ttask/todotxtio.py"]
