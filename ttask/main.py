@@ -1,13 +1,11 @@
 from ttask.todotxtio import *
 import curses
 import os
-from os.path import expanduser
 
-home = expanduser("~")
+home = os.path.expanduser("~")
 todotxt = home+'/todo.txt'
 
 def write(task: Todo):
-    global todotxt
     to_file(todotxt, tasks)
 
 def switch_priority(task: Todo):
@@ -46,9 +44,13 @@ def get_input(win: 'curses._CursesWindow', prompt: str):
                 input += chr(char)
             win.clear()
             win.box()
-            win.addstr(1, 1, prompt+input)
+            if len(input) > x - len(prompt):
+                win.addstr(1, 1, prompt+input[len(input)+len(prompt)-x+2:])
+            else:
+                win.addstr(1, 1, prompt+input)
             win.refresh()
             char = win.getch()
+    return None
 
 def c_main(stdscr: 'curses._CursesWindow'):
     stdscr.keypad(True)
@@ -82,8 +84,7 @@ def c_main(stdscr: 'curses._CursesWindow'):
 
         # HIGHLIGHT SELECTED TASK
         stdscr.chgat(task_index+1, 1, curses.A_STANDOUT)
-
-        stdscr.border(0)
+        stdscr.box()
         stdscr.refresh()
 
         ###### HANDLE KEYS
@@ -106,7 +107,7 @@ def c_main(stdscr: 'curses._CursesWindow'):
         elif key == ord('r'): # REMOVE TASK
             if selected_task:
                 text = get_input(win2, 'Confirm (Y,n) = ')
-                if text.lower() == 'y' or text == '':
+                if text in ('y', 'Y', ''):
                     del tasks[task_index]
                     task_index -= 1
         elif key == ord('w'): # WRITE CHANGE TO FILE
@@ -115,17 +116,17 @@ def c_main(stdscr: 'curses._CursesWindow'):
             switch_priority(selected_task)
         elif key == ord('s'):
             sort_tasks()
-            
+    
+    sort_tasks()
     write(tasks)
     return
 
 def main():
     global tasks
-    if not os.path.exists(todotxt):
-        open(todotxt, 'w').close()
+    if not os.path.exists(todotxt): open(todotxt, 'w').close()
     tasks = from_file(todotxt)
     sort_tasks()
     return curses.wrapper(c_main)
 
 if __name__ == '__main__':
-    exit(main()) 
+    exit(main())
