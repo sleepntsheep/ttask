@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ttask"
-version = "0.1.3"
+version = "0.1.4"
 description = ""
 authors = ["sleepntsheep <contact@papangkorn.com>"]
 license = "MIT"
@@ -9,7 +9,7 @@ repository = "https://github.com/sleepntsheep/ttask"
 
 [tool.poetry.dependencies]
 python = ">=3.5"
-windows-curses = {version = "^2.2.0", platform = "windows"}
+windows-curses = {version = "^2.2.0", platform = "win32"}
 
 [tool.poetry.scripts]
 ttask = "ttask.main:main"
