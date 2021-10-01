@@ -18,6 +18,11 @@ q: quit and write changes
 e: edit priority
 ```
 
+## installation
+```
+pip3 install ttask
+```
+
 ## dependencies
 
 windows:
