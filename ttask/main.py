@@ -23,21 +23,32 @@ def done(task: Todo):
 def sort_tasks():
     global tasks
     tasks.sort(key=lambda x: x.priority, reverse=False)
-    f = []
-    uf = []
-    for t in tasks:
-        if t.completed: f.append(t)
-        else: uf.append(t)
-    tasks = uf + f
+    tasks.sort(key=lambda x: x.completed, reverse=False)
 
 def get_input(win: 'curses._CursesWindow', prompt: str):
-    curses.echo()
     y, x = win.getmaxyx()
+    win.border(0)
     win.addstr(1, 1, prompt)
-    input = win.getstr(1, len(prompt) + 2).decode()
-    win.addstr(1, 1, ' '*x)
-    curses.noecho()
-    return input
+    win.refresh()
+
+    input = ''
+    char = win.getch()
+    if char == 10 or char == curses.KEY_ENTER:
+        return ''
+
+    while char != 27: #esc
+        if char == 10 or char == curses.KEY_ENTER:
+            return input.replace('\n','')
+        else:
+            if char == 8 or char == 127 or char == curses.KEY_BACKSPACE:
+                if len(input) > 0: input = input[:-1]
+            else:
+                input += chr(char)
+            win.clear()
+            win.box()
+            win.addstr(1, 1, prompt+input)
+            win.refresh()
+            char = win.getch()
 
 def c_main(stdscr: 'curses._CursesWindow'):
     stdscr.keypad(True)
@@ -48,8 +59,7 @@ def c_main(stdscr: 'curses._CursesWindow'):
     y, x = stdscr.getmaxyx()
     task_index = 0
     key = None
-    win1 = curses.newwin(y-3, x, 0, 0)
-    win2 = curses.newwin(3, x, y-3, 0)
+    win2 = stdscr.subwin(3, x, y-3, 0)
 
     while key != ord('q'):
         tasks_count = len(tasks)
@@ -63,34 +73,30 @@ def c_main(stdscr: 'curses._CursesWindow'):
         else: selected_task = None
 
         ##### RENDERING
-        win1.clear()
+        stdscr.clear()
         win2.clear()
         
         for index, task in enumerate(tasks):
-            win1.insstr(
+            stdscr.insstr(
                 index+1, 1, f"({'-' if task.priority == 'Z' else task.priority}) [{ 'x' if task.completed else ' '}] {task.text}")
 
         # HIGHLIGHT SELECTED TASK
-        win1.chgat(task_index+1, 1, curses.A_STANDOUT)
+        stdscr.chgat(task_index+1, 1, curses.A_STANDOUT)
 
-        win1.border(0)
-        win2.border(0)
-        win1.refresh()
-        win2.refresh()
+        stdscr.border(0)
+        stdscr.refresh()
 
         ###### HANDLE KEYS
         key = stdscr.getch()
         if key == ord('a'):
-            text = get_input(win2, 'ADD: Enter task name =')
-            if text != '':
+            text = get_input(win2, 'ADD: Enter task name = ')
+            if text != '' and text:
                 newtask = Todo(
                     text = text,
                     completed = False,
                     priority = 'Z', 
                 )
                 tasks.append(newtask)
-            sort_tasks()
-
         elif key == ord('j') or key == 258: # DOWN
             task_index += 1
         elif key == ord('k') or key == 259: #UP
@@ -99,7 +105,7 @@ def c_main(stdscr: 'curses._CursesWindow'):
             done(selected_task)
         elif key == ord('r'): # REMOVE TASK
             if selected_task:
-                text = get_input(win2, 'Confirm (Y,n) =')
+                text = get_input(win2, 'Confirm (Y,n) = ')
                 if text.lower() == 'y' or text == '':
                     del tasks[task_index]
                     task_index -= 1
@@ -107,6 +113,8 @@ def c_main(stdscr: 'curses._CursesWindow'):
             write(tasks)
         elif key == ord('e'): # EDIT PRIORITY
             switch_priority(selected_task)
+        elif key == ord('s'):
+            sort_tasks()
             
     write(tasks)
     return
