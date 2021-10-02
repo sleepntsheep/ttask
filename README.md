@@ -28,6 +28,10 @@ pip3 install ttask
 windows:
 >  windows-curses
 
+## demo
+
+![demo](https://i.imgur.com/jMnCtfq.png)
+
 ## notes
 
 todo.txt is put in your home folder

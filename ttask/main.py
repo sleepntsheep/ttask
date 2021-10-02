@@ -94,7 +94,7 @@ def c_main(stdscr):
         for index, task in enumerate(tasks):
             stdscr.insstr(
                 index + 1, 1,
-                f"({'-' if task.priority == 'Z' else task.priority}) [{'x' if task.completed else ' '}] {task.text}")
+                f"[{'x' if task.completed else ' '}] ({task.priority.replace('Z', '-')}) {task.text}")
 
         stdscr.chgat(task_index + 1, 1, curses.A_STANDOUT)
         stdscr.box()
