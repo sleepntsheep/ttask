@@ -11,7 +11,7 @@ key
 ```
 a: add new task
 r: remove selected task
-j, k/ up, down: navigate selected task/ property
+j, k/ up, down: navigate selected task
 d: mark task as done 
 w: write changes to todo.txt
 q: quit and write changes
